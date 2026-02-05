@@ -1,288 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Temp Mail Generator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real Temp Mail Inbox</title>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      background: #0f172a;
-      color: #e5e7eb;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      background: #020617;
-      border-radius: 16px;
-      padding: 24px 24px 28px;
-      width: 100%;
-      max-width: 480px;
-      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.8);
-      border: 1px solid #1f2937;
-    }
-
-    h1 {
-      margin: 0 0 4px;
-      font-size: 1.6rem;
-      color: #f9fafb;
-    }
-
-    .subtitle {
-      color: #9ca3af;
-      font-size: 0.9rem;
-      margin-bottom: 18px;
-    }
-
-    .field-label {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #6b7280;
-      margin-bottom: 6px;
-    }
-
-    .email-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .email-input {
-      flex: 1;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 0.95rem;
-      outline: none;
-    }
-
-    .email-input:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
-    }
-
-    .buttons {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    button {
-      border: none;
-      border-radius: 10px;
-      padding: 9px 12px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.15s ease, transform 0.05s ease,
-        box-shadow 0.15s ease;
-      white-space: nowrap;
-    }
-
-    button:active {
-      transform: translateY(1px);
-      box-shadow: none;
-    }
-
-    .btn-generate {
-      background: #2563eb;
-      color: #f9fafb;
-      flex: 1;
-      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
-    }
-
-    .btn-generate:hover {
-      background: #1d4ed8;
-    }
-
-    .btn-copy {
-      background: #111827;
-      color: #e5e7eb;
-      border: 1px solid #374151;
-      min-width: 80px;
-      justify-content: center;
-    }
-
-    .btn-copy.copied {
-      background: #16a34a;
-      border-color: #16a34a;
-    }
-
-    .domain-select {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 0.9rem;
-      margin-bottom: 14px;
-    }
-
-    .domain-select:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
-    }
-
-    .tip {
-      font-size: 0.8rem;
-      color: #6b7280;
-      line-height: 1.5;
-    }
-
-    .tip strong {
-      color: #e5e7eb;
-    }
-
-    .footer {
-      margin-top: 16px;
-      border-top: 1px solid #111827;
-      padding-top: 12px;
-      font-size: 0.75rem;
-      color: #4b5563;
-    }
-
-    a {
-      color: #60a5fa;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        margin: 16px;
-        padding: 18px 16px 22px;
-      }
-
-      h1 {
-        font-size: 1.4rem;
-      }
-    }
+    body { font-family: -apple-system, sans-serif; background: #121212; color: #fff; padding: 20px; max-width: 600px; margin: auto; }
+    .box { background: #1e1e1e; padding: 20px; border-radius: 10px; text-align: center; }
+    input { padding: 10px; width: 70%; text-align: center; font-size: 16px; border-radius: 5px; border: 1px solid #333; background: #2a2a2a; color: #fff; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; border: none; background: #007bff; color: white; margin-top: 10px; }
+    button:hover { background: #0056b3; }
+    #inbox { margin-top: 20px; text-align: left; }
+    .email-item { background: #2a2a2a; margin-bottom: 10px; padding: 15px; border-radius: 8px; cursor: pointer; border-left: 4px solid #007bff; }
+    .email-item:hover { background: #333; }
+    .email-content { background: #fff; color: #000; padding: 15px; border-radius: 8px; margin-top: 20px; display: none; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Temp Mail Generator</h1>
-    <div class="subtitle">Generate a disposable email address in one click.</div>
 
-    <div class="field-label">Email address</div>
+  <div class="box">
+    <h2>Your Temp Email</h2>
+    <input type="text" id="emailAddress" readonly placeholder="Generating...">
+    <br>
+    <button onclick="checkInbox()">Check Inbox</button>
+  </div>
 
-    <div class="email-box">
-      <input
-        id="tempEmail"
-        class="email-input"
-        type="text"
-        readonly
-        placeholder="Click Generate to create a temp email"
-      />
-      <button id="copyBtn" class="btn-copy" type="button">
-        Copy
-      </button>
-    </div>
+  <div id="inbox">
+    <p style="text-align:center; color:#aaa;">Inbox is empty. Waiting for emails...</p>
+  </div>
 
-    <div class="buttons">
-      <button id="generateBtn" class="btn-generate" type="button">
-        Generate new
-      </button>
-    </div>
-
-    <div class="field-label">Temp mail domain</div>
-    <select id="domainSelect" class="domain-select">
-      <!-- These are common temp/public inbox providers.
-           This page ONLY generates the string, not the mailbox itself. -->
-      <option value="mailinator.com">@mailinator.com</option>
-      <option value="sharklasers.com">@sharklasers.com (GuerrillaMail)</option>
-      <option value="tempmailo.com">@tempmailo.com</option>
-      <option value="1secmail.com">@1secmail.com</option>
-      <option value="examplemail.test">@examplemail.test (fake/demo)</option>
-    </select>
-
-    <div class="tip">
-      <strong>Important:</strong> This page only generates a random address
-      string. To actually read emails sent to it, you must open the chosen
-      provider’s website (for example, <a href="https://www.mailinator.com" target="_blank">mailinator.com</a>)
-      and check the inbox for that address.
-    </div>
-
-    <div class="footer">
-      Host this file on GitHub Pages (public repo with an <code>index.html</code>)
-      to get your own simple temp mail generator page.
-    </div>
+  <div id="emailView" class="email-content">
+    <button onclick="closeEmail()" style="background:#dc3545; float:right; padding:5px 10px;">Close</button>
+    <h3 id="eSubject"></h3>
+    <p><b>From:</b> <span id="eFrom"></span></p>
+    <hr>
+    <div id="eBody"></div>
   </div>
 
   <script>
-    function generateRandomUsername(length = 10) {
-      const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-      let result = "";
-      for (let i = 0; i < length; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    let currentLogin = '';
+    let currentDomain = '';
+
+    // 1. Generate an email when the page loads
+    async function generateEmail() {
+      const res = await fetch('https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1');
+      const data = await res.json();
+      const email = data[0];
+      
+      document.getElementById('emailAddress').value = email;
+      
+      // Split the email into login and domain for the API
+      [currentLogin, currentDomain] = email.split('@');
+    }
+
+    // 2. Check for new emails
+    async function checkInbox() {
+      if (!currentLogin) return;
+      
+      const inboxDiv = document.getElementById('inbox');
+      inboxDiv.innerHTML = '<p style="text-align:center; color:#aaa;">Checking...</p>';
+
+      const url = `https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${currentDomain}`;
+      const res = await fetch(url);
+      const emails = await res.json();
+
+      if (emails.length === 0) {
+        inboxDiv.innerHTML = '<p style="text-align:center; color:#aaa;">Inbox is empty.</p>';
+        return;
       }
-      return result;
+
+      inboxDiv.innerHTML = '<h3>Inbox:</h3>';
+      emails.forEach(email => {
+        const div = document.createElement('div');
+        div.className = 'email-item';
+        div.innerHTML = `<strong>${email.subject}</strong><br><small>From: ${email.from}</small>`;
+        div.onclick = () => readEmail(email.id);
+        inboxDiv.appendChild(div);
+      });
     }
 
-    function generateTempEmail() {
-      const domainSelect = document.getElementById("domainSelect");
-      const domain = domainSelect.value;
-      const username = generateRandomUsername(10);
-      return username + "@" + domain;
+    // 3. Read a specific email
+    async function readEmail(id) {
+      const url = `https://www.1secmail.com/api/v1/?action=readMessage&login=${currentLogin}&domain=${currentDomain}&id=${id}`;
+      const res = await fetch(url);
+      const emailData = await res.json();
+
+      document.getElementById('eSubject').innerText = emailData.subject;
+      document.getElementById('eFrom').innerText = emailData.from;
+      // Show HTML body if it exists, otherwise show text body
+      document.getElementById('eBody').innerHTML = emailData.htmlBody || emailData.textBody;
+      
+      document.getElementById('emailView').style.display = 'block';
     }
 
-    function setEmail() {
-      const input = document.getElementById("tempEmail");
-      input.value = generateTempEmail();
+    function closeEmail() {
+      document.getElementById('emailView').style.display = 'none';
     }
 
-    async function copyEmail() {
-      const input = document.getElementById("tempEmail");
-      const copyBtn = document.getElementById("copyBtn");
-      const value = input.value.trim();
-
-      if (!value) return;
-
-      try {
-        await navigator.clipboard.writeText(value);
-        copyBtn.textContent = "Copied";
-        copyBtn.classList.add("copied");
-        setTimeout(() => {
-          copyBtn.textContent = "Copy";
-          copyBtn.classList.remove("copied");
-        }, 1500);
-      } catch (e) {
-        // Fallback: select text so user can copy manually
-        input.select();
-        copyBtn.textContent = "Select text";
-        setTimeout(() => {
-          copyBtn.textContent = "Copy";
-        }, 1500);
-      }
-    }
-
-    document.getElementById("generateBtn").addEventListener("click", setEmail);
-    document.getElementById("copyBtn").addEventListener("click", copyEmail);
-
-    // Generate one on first load
-    setEmail();
+    // Start
+    generateEmail();
   </script>
+
 </body>
 </html>
