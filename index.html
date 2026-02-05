@@ -3,14 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Live Temp Mail</title>
+  <title>Temp Mail - Full Inbox</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: #0f172a;
@@ -19,43 +15,30 @@
       padding: 20px;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-    }
+    .container { max-width: 900px; margin: 0 auto; }
 
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+    header { text-align: center; margin-bottom: 30px; }
 
     h1 {
       font-size: 2.5rem;
       background: linear-gradient(90deg, #60a5fa, #a78bfa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 8px;
     }
 
-    .subtitle {
-      color: #94a3b8;
-      font-size: 1rem;
-    }
-
-    .email-card {
+    .card {
       background: #1e293b;
       border-radius: 16px;
       padding: 24px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       border: 1px solid #334155;
     }
 
-    .email-display {
+    .email-row {
       display: flex;
       gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
       margin-bottom: 16px;
+      flex-wrap: wrap;
     }
 
     .email-input {
@@ -67,13 +50,7 @@
       padding: 14px 18px;
       color: #f8fafc;
       font-size: 1.1rem;
-      font-family: 'SF Mono', monospace;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .email-input:focus {
-      border-color: #60a5fa;
+      font-family: monospace;
     }
 
     .btn {
@@ -84,183 +61,77 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
+    }
+
+    .btn-primary { background: #3b82f6; color: white; }
+    .btn-primary:hover { background: #2563eb; }
+
+    .btn-secondary { background: #334155; color: #e2e8f0; }
+    .btn-secondary:hover { background: #475569; }
+
+    .status {
       display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #2563eb;
-      transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-      background: #334155;
-      color: #e2e8f0;
-    }
-
-    .btn-secondary:hover {
-      background: #475569;
-    }
-
-    .btn-success {
-      background: #10b981;
-      color: white;
-    }
-
-    .status-bar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .connection-status {
-      display: flex;
       align-items: center;
       gap: 8px;
       padding: 8px 16px;
       border-radius: 20px;
       font-size: 0.85rem;
-      font-weight: 500;
     }
 
-    .status-connecting {
-      background: #f59e0b20;
-      color: #f59e0b;
-    }
-
-    .status-connected {
-      background: #10b98120;
-      color: #10b981;
-    }
-
-    .status-disconnected {
-      background: #ef444420;
-      color: #ef4444;
-    }
+    .status-checking { background: #f59e0b20; color: #f59e0b; }
+    .status-connected { background: #10b98120; color: #10b981; }
 
     .pulse {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      animation: pulse 2s infinite;
+      background: currentColor;
+      animation: pulse 1.5s infinite;
     }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .inbox-section {
-      background: #1e293b;
-      border-radius: 16px;
-      border: 1px solid #334155;
-      overflow: hidden;
+      50% { opacity: 0.3; }
     }
 
     .inbox-header {
-      padding: 20px 24px;
-      border-bottom: 1px solid #334155;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 16px;
     }
 
-    .inbox-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
+    .inbox-title { font-size: 1.2rem; font-weight: 600; }
 
     .badge {
       background: #3b82f6;
       color: white;
-      padding: 4px 12px;
+      padding: 4px 14px;
       border-radius: 20px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 600;
     }
 
-    .empty-state {
-      padding: 60px 24px;
-      text-align: center;
-      color: #64748b;
-    }
-
-    .empty-icon {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 20px;
-      background: #334155;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.5rem;
-    }
-
-    .email-list {
-      max-height: 600px;
-      overflow-y: auto;
-    }
+    .email-list { max-height: 500px; overflow-y: auto; }
 
     .email-item {
-      padding: 20px 24px;
+      padding: 16px 20px;
       border-bottom: 1px solid #334155;
       cursor: pointer;
       transition: background 0.2s;
     }
 
-    .email-item:hover {
-      background: #252f47;
-    }
+    .email-item:hover { background: #252f47; }
+    .email-item:last-child { border-bottom: none; }
 
-    .email-item:last-child {
-      border-bottom: none;
-    }
+    .email-from { font-weight: 600; color: #f8fafc; }
+    .email-subject { color: #94a3b8; margin: 4px 0; }
+    .email-preview { color: #64748b; font-size: 0.9rem; }
 
-    .email-item.unread {
-      border-left: 3px solid #3b82f6;
-    }
-
-    .email-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 8px;
-      gap: 16px;
-    }
-
-    .email-from {
-      font-weight: 600;
-      color: #f8fafc;
-      word-break: break-all;
-    }
-
-    .email-date {
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
       color: #64748b;
-      font-size: 0.85rem;
-      white-space: nowrap;
-    }
-
-    .email-subject {
-      color: #94a3b8;
-      font-size: 0.95rem;
-      margin-bottom: 8px;
-    }
-
-    .email-preview {
-      color: #64748b;
-      font-size: 0.9rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
 
     .modal-overlay {
@@ -274,9 +145,7 @@
       z-index: 100;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .modal {
       background: #1e293b;
@@ -296,23 +165,12 @@
       align-items: center;
     }
 
-    .modal-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
     .modal-close {
       background: none;
       border: none;
       color: #94a3b8;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       cursor: pointer;
-      padding: 4px;
-      line-height: 1;
-    }
-
-    .modal-close:hover {
-      color: #f8fafc;
     }
 
     .modal-body {
@@ -321,67 +179,30 @@
       max-height: 60vh;
     }
 
-    .modal-meta {
+    .meta {
       display: grid;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 20px;
       padding-bottom: 20px;
       border-bottom: 1px solid #334155;
     }
 
-    .meta-row {
-      display: flex;
-      gap: 12px;
-      font-size: 0.95rem;
-    }
+    .meta-row { display: flex; gap: 12px; }
+    .meta-label { color: #64748b; min-width: 70px; }
+    .meta-value { color: #e2e8f0; word-break: break-all; }
 
-    .meta-label {
-      color: #64748b;
-      min-width: 60px;
-    }
-
-    .meta-value {
-      color: #e2e8f0;
-      word-break: break-all;
-    }
-
-    .email-content {
+    .email-body {
       color: #e2e8f0;
       line-height: 1.7;
       white-space: pre-wrap;
     }
 
-    .email-content iframe {
+    .email-body iframe {
       width: 100%;
       min-height: 300px;
       border: none;
       border-radius: 8px;
       background: white;
-    }
-
-    .server-config {
-      background: #0f172a;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-
-    .config-row {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .config-input {
-      flex: 1;
-      min-width: 200px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 10px 14px;
-      color: #e2e8f0;
-      font-size: 0.95rem;
     }
 
     .toast {
@@ -392,423 +213,308 @@
       color: white;
       padding: 16px 24px;
       border-radius: 12px;
-      font-weight: 500;
       transform: translateX(150%);
       transition: transform 0.3s;
-      z-index: 200;
     }
 
-    .toast.show {
-      transform: translateX(0);
-    }
+    .toast.show { transform: translateX(0); }
 
-    @media (max-width: 640px) {
-      h1 { font-size: 1.8rem; }
-      .email-display { flex-direction: column; align-items: stretch; }
-      .email-input { min-width: auto; }
-      .btn { justify-content: center; }
-      .email-meta { flex-direction: column; gap: 4px; }
+    .warning {
+      background: #f59e0b20;
+      border: 1px solid #f59e0b;
+      color: #fbbf24;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>📧 Live Temp Mail</h1>
-      <p class="subtitle">Real temporary email with live inbox updates</p>
+      <h1>📧 Temp Mail with Inbox</h1>
+      <p style="color: #94a3b8; margin-top: 8px;">Generate, receive, and read emails — all in one page</p>
     </header>
 
-    <div class="email-card">
-      <div class="server-config">
-        <div class="config-row">
-          <input 
-            type="text" 
-            id="serverUrl" 
-            class="config-input" 
-            placeholder="Your server URL (e.g., https://temp-mail-api.onrender.com)"
-            value=""
-          />
-          <button class="btn btn-secondary" onclick="saveServer()">Save Server</button>
-        </div>
-      </div>
+    <div class="warning">
+      ⚠️ <strong>Note:</strong> This uses a public CORS proxy. For production, use your own backend (see previous response).
+    </div>
 
-      <div class="email-display">
-        <input 
-          type="text" 
-          id="emailInput" 
-          class="email-input" 
-          readonly 
-          placeholder="Click Generate to create email"
-        />
-        <button class="btn btn-secondary" onclick="copyEmail()">
-          📋 Copy
-        </button>
-        <button class="btn btn-primary" onclick="generateEmail()">
-          🔄 Generate New
-        </button>
+    <div class="card">
+      <div class="email-row">
+        <input type="text" id="email" class="email-input" readonly placeholder="Click Generate" />
+        <button class="btn btn-secondary" onclick="copyEmail()">Copy</button>
+        <button class="btn btn-primary" onclick="generateEmail()">Generate New</button>
       </div>
-
-      <div class="status-bar">
-        <div id="statusIndicator" class="connection-status status-disconnected">
-          <span class="pulse" style="background: currentColor;"></span>
-          <span id="statusText">Disconnected</span>
-        </div>
-        <button class="btn btn-secondary" onclick="refreshInbox()">
-          🔄 Refresh
-        </button>
+      
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <span id="status" class="status status-checking">
+          <span class="pulse"></span>
+          Waiting...
+        </span>
+        <button class="btn btn-secondary" onclick="checkInbox()">Refresh Now</button>
       </div>
     </div>
 
-    <div class="inbox-section">
+    <div class="card">
       <div class="inbox-header">
         <span class="inbox-title">📥 Inbox</span>
-        <span id="emailCount" class="badge">0</span>
+        <span id="count" class="badge">0</span>
       </div>
-      <div id="emailList" class="email-list">
-        <div class="empty-state">
-          <div class="empty-icon">📭</div>
-          <p>No emails yet</p>
-          <p style="font-size: 0.9rem; margin-top: 8px;">Emails will appear here automatically</p>
+      <div id="inbox" class="email-list">
+        <div class="empty">
+          <div style="font-size: 3rem; margin-bottom: 12px;">📭</div>
+          <p>No emails yet. Generate an address and wait for mail.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Email Modal -->
-  <div id="emailModal" class="modal-overlay" onclick="closeModal(event)">
+  <!-- Email Reader Modal -->
+  <div id="modal" class="modal-overlay" onclick="closeModal(event)">
     <div class="modal" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <span class="modal-title">📧 Email Details</span>
+        <span style="font-weight: 600;">📧 Email Details</span>
         <button class="modal-close" onclick="closeModal()">&times;</button>
       </div>
       <div class="modal-body">
-        <div class="modal-meta">
+        <div class="meta">
           <div class="meta-row">
             <span class="meta-label">From:</span>
-            <span id="modalFrom" class="meta-value"></span>
+            <span id="m-from" class="meta-value"></span>
           </div>
           <div class="meta-row">
             <span class="meta-label">To:</span>
-            <span id="modalTo" class="meta-value"></span>
+            <span id="m-to" class="meta-value"></span>
           </div>
           <div class="meta-row">
             <span class="meta-label">Date:</span>
-            <span id="modalDate" class="meta-value"></span>
+            <span id="m-date" class="meta-value"></span>
           </div>
           <div class="meta-row">
             <span class="meta-label">Subject:</span>
-            <span id="modalSubject" class="meta-value"></span>
+            <span id="m-subject" class="meta-value"></span>
           </div>
         </div>
-        <div id="modalContent" class="email-content"></div>
+        <div id="m-body" class="email-body"></div>
       </div>
     </div>
   </div>
 
-  <div id="toast" class="toast">Copied to clipboard!</div>
+  <div id="toast" class="toast">Copied!</div>
 
   <script>
-    // ============================================
-    // CONFIGURATION - UPDATE THIS AFTER DEPLOYING BACKEND
-    // ============================================
-    const DEFAULT_SERVER = localStorage.getItem('tempMailServer') || '';
-    
+    // Using public CORS proxies (may be rate-limited)
+    const CORS_PROXIES = [
+      'https://api.allorigins.win/raw?url=',
+      'https://corsproxy.io/?',
+      'https://api.codetabs.com/v1/proxy?quest='
+    ];
+
     let currentEmail = null;
-    let ws = null;
+    let emailParts = null; // {login, domain}
     let messages = [];
-    let pollingInterval = null;
+    let pollInterval = null;
 
-    // Initialize
-    document.getElementById('serverUrl').value = DEFAULT_SERVER;
-
-    function getServerUrl() {
-      const url = document.getElementById('serverUrl').value.trim();
-      return url.replace(/\/$/, ''); // Remove trailing slash
+    function getProxyUrl(url) {
+      // Rotate proxies to avoid rate limits
+      const proxy = CORS_PROXIES[Math.floor(Math.random() * CORS_PROXIES.length)];
+      return proxy + encodeURIComponent(url);
     }
 
-    function saveServer() {
-      const url = getServerUrl();
-      localStorage.setItem('tempMailServer', url);
-      showToast('Server saved!');
-      disconnect();
-    }
-
-    // ============================================
-    // WEBSOCKET CONNECTION
-    // ============================================
-    function connectWebSocket() {
-      const serverUrl = getServerUrl();
-      if (!serverUrl || !currentEmail) return;
-
-      const wsUrl = serverUrl.replace(/^http/, 'ws');
-      
-      updateStatus('connecting', 'Connecting...');
-
-      ws = new WebSocket(wsUrl);
-
-      ws.onopen = () => {
-        updateStatus('connected', 'Live updates active');
-        ws.send(JSON.stringify({
-          type: 'subscribe',
-          email: currentEmail
-        }));
-      };
-
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        handleServerMessage(data);
-      };
-
-      ws.onclose = () => {
-        updateStatus('disconnected', 'Disconnected - falling back to polling');
-        startPolling(); // Fallback to HTTP polling
-      };
-
-      ws.onerror = (err) => {
-        console.error('WebSocket error:', err);
-        updateStatus('disconnected', 'Connection failed');
-      };
-    }
-
-    function disconnect() {
-      if (ws) {
-        ws.close();
-        ws = null;
-      }
-      if (pollingInterval) {
-        clearInterval(pollingInterval);
-        pollingInterval = null;
-      }
-    }
-
-    function updateStatus(state, text) {
-      const indicator = document.getElementById('statusIndicator');
-      const statusText = document.getElementById('statusText');
-      
-      indicator.className = `connection-status status-${state}`;
-      statusText.textContent = text;
-    }
-
-    // ============================================
-    // FALLBACK POLLING
-    // ============================================
-    function startPolling() {
-      if (pollingInterval) return;
-      
-      refreshInbox(); // Immediate check
-      
-      pollingInterval = setInterval(() => {
-        if (currentEmail) refreshInbox();
-      }, 5000);
-    }
-
-    // ============================================
-    // EMAIL GENERATION
-    // ============================================
-    async function generateEmail() {
-      const serverUrl = getServerUrl();
-      
-      if (!serverUrl) {
-        alert('Please enter your server URL first!');
-        document.getElementById('serverUrl').focus();
-        return;
-      }
-
-      disconnect();
-      messages = [];
-      renderInbox();
-
-      try {
-        const response = await fetch(`${serverUrl}/api/generate`);
-        const data = await response.json();
-        
-        currentEmail = data.email;
-        document.getElementById('emailInput').value = currentEmail;
-        
-        // Connect to WebSocket for live updates
-        connectWebSocket();
-        
-      } catch (err) {
-        console.error('Generate error:', err);
-        // Fallback: generate locally
-        const localEmail = generateLocalEmail();
-        currentEmail = localEmail;
-        document.getElementById('emailInput').value = localEmail;
-        startPolling();
-      }
-    }
-
-    function generateLocalEmail() {
+    function generateEmail() {
       const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-      let username = '';
+      let login = '';
       for (let i = 0; i < 10; i++) {
-        username += chars.charAt(Math.floor(Math.random() * chars.length));
+        login += chars[Math.floor(Math.random() * chars.length)];
       }
+      
       const domains = ['1secmail.com', '1secmail.org', '1secmail.net'];
       const domain = domains[Math.floor(Math.random() * domains.length)];
-      return `${username}@${domain}`;
-    }
-
-    // ============================================
-    // INBOX MANAGEMENT
-    // ============================================
-    async function refreshInbox() {
-      if (!currentEmail) return;
       
-      const serverUrl = getServerUrl();
-      if (!serverUrl) return;
-
-      try {
-        const response = await fetch(`${serverUrl}/api/inbox/${encodeURIComponent(currentEmail)}`);
-        const data = await response.json();
-        handleServerMessage({
-          type: 'inbox',
-          messages: data.messages || [],
-          count: data.count || 0
-        });
-      } catch (err) {
-        console.error('Refresh error:', err);
-      }
+      currentEmail = `${login}@${domain}`;
+      emailParts = { login, domain };
+      
+      document.getElementById('email').value = currentEmail;
+      messages = [];
+      renderInbox();
+      
+      updateStatus('Checking for emails...', 'checking');
+      
+      // Start polling
+      if (pollInterval) clearInterval(pollInterval);
+      checkInbox(); // immediate
+      pollInterval = setInterval(checkInbox, 5000);
     }
 
-    function handleServerMessage(data) {
-      if (data.type === 'error') {
-        console.error('Server error:', data.message);
-        return;
-      }
-
-      if (data.messages) {
-        // Merge and deduplicate messages
-        const newMessages = data.messages;
-        const existingIds = new Set(messages.map(m => m.id));
+    async function checkInbox() {
+      if (!emailParts) return;
+      
+      const { login, domain } = emailParts;
+      const apiUrl = `https://www.1secmail.com/api/v1/?action=getMessages&login=${login}&domain=${domain}`;
+      
+      try {
+        const response = await fetch(getProxyUrl(apiUrl));
+        const data = await response.json();
         
-        newMessages.forEach(msg => {
-          if (!existingIds.has(msg.id)) {
-            messages.unshift(msg); // Add to top
-            existingIds.add(msg.id);
+        if (!Array.isArray(data)) {
+          updateStatus('API error - retrying...', 'checking');
+          return;
+        }
+        
+        // Fetch full content for new messages
+        const currentIds = new Set(messages.map(m => m.id));
+        const newMessages = [];
+        
+        for (const msg of data) {
+          if (!currentIds.has(msg.id)) {
+            const fullMsg = await fetchMessage(msg.id);
+            if (fullMsg) {
+              newMessages.push(fullMsg);
+            }
           }
-        });
-
-        // Sort by date (newest first)
-        messages.sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
         
-        renderInbox();
-        
-        // Show notification for new emails
-        if (data.type === 'update' && newMessages.length > 0) {
+        if (newMessages.length > 0) {
+          messages.unshift(...newMessages);
+          messages.sort((a, b) => new Date(b.date) - new Date(a.date));
+          renderInbox();
           showToast(`📧 ${newMessages.length} new email(s)!`);
         }
+        
+        updateStatus('Live • Checking every 5s', 'connected');
+        
+      } catch (err) {
+        console.error('Check failed:', err);
+        updateStatus('Connection failed - retrying...', 'checking');
+      }
+    }
+
+    async function fetchMessage(id) {
+      const { login, domain } = emailParts;
+      const url = `https://www.1secmail.com/api/v1/?action=readMessage&login=${login}&domain=${domain}&id=${id}`;
+      
+      try {
+        const response = await fetch(getProxyUrl(url));
+        const data = await response.json();
+        
+        return {
+          id: data.id,
+          from: data.from,
+          subject: data.subject,
+          date: data.date,
+          body: data.textBody || data.body || '(No content)',
+          htmlBody: data.htmlBody || null,
+          attachments: data.attachments || []
+        };
+      } catch (err) {
+        console.error('Fetch message failed:', err);
+        return null;
       }
     }
 
     function renderInbox() {
-      const list = document.getElementById('emailList');
-      const countBadge = document.getElementById('emailCount');
+      const inbox = document.getElementById('inbox');
+      const count = document.getElementById('count');
       
-      countBadge.textContent = messages.length;
-
+      count.textContent = messages.length;
+      
       if (messages.length === 0) {
-        list.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon">📭</div>
-            <p>No emails yet</p>
-            <p style="font-size: 0.9rem; margin-top: 8px;">Emails will appear here automatically</p>
+        inbox.innerHTML = `
+          <div class="empty">
+            <div style="font-size: 3rem; margin-bottom: 12px;">📭</div>
+            <p>No emails yet. Generate an address and wait for mail.</p>
           </div>
         `;
         return;
       }
-
-      list.innerHTML = messages.map(msg => `
-        <div class="email-item unread" onclick="openEmail(${msg.id})">
-          <div class="email-meta">
-            <span class="email-from">${escapeHtml(msg.from)}</span>
-            <span class="email-date">${formatDate(msg.date)}</span>
+      
+      inbox.innerHTML = messages.map(m => `
+        <div class="email-item" onclick="openEmail(${m.id})">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+            <span class="email-from">${escape(m.from)}</span>
+            <span style="color: #64748b; font-size: 0.85rem; white-space: nowrap;">${timeAgo(m.date)}</span>
           </div>
-          <div class="email-subject">${escapeHtml(msg.subject || '(No subject)')}</div>
-          <div class="email-preview">${escapeHtml(msg.body.substring(0, 150))}...</div>
+          <div class="email-subject">${escape(m.subject || '(No subject)')}</div>
+          <div class="email-preview">${escape(m.body.substring(0, 120))}...</div>
         </div>
       `).join('');
     }
 
-    // ============================================
-    // EMAIL VIEWING
-    // ============================================
     function openEmail(id) {
-      const msg = messages.find(m => m.id === id);
-      if (!msg) return;
-
-      document.getElementById('modalFrom').textContent = msg.from;
-      document.getElementById('modalTo').textContent = currentEmail;
-      document.getElementById('modalDate').textContent = formatDate(msg.date);
-      document.getElementById('modalSubject').textContent = msg.subject || '(No subject)';
-
-      const contentDiv = document.getElementById('modalContent');
+      const m = messages.find(x => x.id === id);
+      if (!m) return;
       
-      if (msg.htmlBody) {
-        // Render HTML in iframe for safety
-        contentDiv.innerHTML = `<iframe sandbox="allow-same-origin" srcdoc="${escapeHtml(msg.htmlBody)}"></iframe>`;
+      document.getElementById('m-from').textContent = m.from;
+      document.getElementById('m-to').textContent = currentEmail;
+      document.getElementById('m-date').textContent = new Date(m.date).toLocaleString();
+      document.getElementById('m-subject').textContent = m.subject || '(No subject)';
+      
+      const bodyDiv = document.getElementById('m-body');
+      
+      if (m.htmlBody) {
+        // Sanitize and display HTML
+        const cleanHtml = DOMPurify ? DOMPurify.sanitize(m.htmlBody) : m.htmlBody;
+        bodyDiv.innerHTML = `<iframe sandbox="allow-same-origin" srcdoc="${escape(cleanHtml)}"></iframe>`;
       } else {
-        contentDiv.textContent = msg.body;
+        bodyDiv.textContent = m.body;
       }
-
-      document.getElementById('emailModal').classList.add('active');
+      
+      document.getElementById('modal').classList.add('active');
     }
 
-    function closeModal(event) {
-      if (!event || event.target === document.getElementById('emailModal')) {
-        document.getElementById('emailModal').classList.remove('active');
+    function closeModal(e) {
+      if (!e || e.target.id === 'modal') {
+        document.getElementById('modal').classList.remove('active');
       }
     }
 
-    // ============================================
-    // UTILITIES
-    // ============================================
+    function updateStatus(text, type) {
+      const status = document.getElementById('status');
+      status.className = `status status-${type}`;
+      status.innerHTML = `<span class="pulse"></span>${text}`;
+    }
+
     async function copyEmail() {
-      const email = document.getElementById('emailInput').value;
+      const email = document.getElementById('email').value;
       if (!email) return;
       
       try {
         await navigator.clipboard.writeText(email);
         showToast('Copied to clipboard!');
-      } catch (err) {
-        // Fallback
-        const input = document.getElementById('emailInput');
-        input.select();
-        showToast('Text selected - press Ctrl+C');
+      } catch {
+        document.getElementById('email').select();
+        showToast('Selected - press Ctrl+C');
       }
     }
 
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
     }
 
-    function escapeHtml(text) {
-      if (!text) return '';
+    function escape(text) {
       const div = document.createElement('div');
-      div.textContent = text;
+      div.textContent = text || '';
       return div.innerHTML;
     }
 
-    function formatDate(dateStr) {
+    function timeAgo(dateStr) {
       const date = new Date(dateStr);
-      const now = new Date();
-      const diff = now - date;
-      
-      // Less than 1 minute
-      if (diff < 60000) return 'Just now';
-      // Less than 1 hour
-      if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-      // Less than 24 hours
-      if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
-      
+      const sec = Math.floor((Date.now() - date) / 1000);
+      if (sec < 60) return 'Just now';
+      if (sec < 3600) return `${Math.floor(sec/60)}m ago`;
+      if (sec < 86400) return `${Math.floor(sec/3600)}h ago`;
       return date.toLocaleDateString();
     }
 
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', disconnect);
+    // Cleanup
+    window.addEventListener('beforeunload', () => {
+      if (pollInterval) clearInterval(pollInterval);
+    });
   </script>
 </body>
 </html>
