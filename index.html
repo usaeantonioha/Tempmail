@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Live Temp Mail</title>
+  <title>Temp Mail</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -20,22 +21,10 @@
     header { text-align: center; margin-bottom: 30px; }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       background: linear-gradient(90deg, #60a5fa, #a78bfa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-    }
-
-    .subtitle { color: #94a3b8; margin-top: 8px; }
-
-    .warning {
-      background: #f59e0b20;
-      border: 1px solid #f59e0b;
-      color: #fbbf24;
-      padding: 16px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      font-size: 0.9rem;
     }
 
     .card {
@@ -63,7 +52,6 @@
       color: #f8fafc;
       font-size: 1.1rem;
       font-family: 'SF Mono', monospace;
-      outline: none;
     }
 
     .btn {
@@ -74,29 +62,13 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
     }
 
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
-    }
+    .btn-primary { background: #3b82f6; color: white; }
+    .btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
 
-    .btn-primary:hover {
-      background: #2563eb;
-      transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-      background: #334155;
-      color: #e2e8f0;
-    }
-
-    .btn-secondary:hover {
-      background: #475569;
-    }
+    .btn-secondary { background: #334155; color: #e2e8f0; }
+    .btn-secondary:hover { background: #475569; }
 
     .status {
       display: inline-flex;
@@ -105,10 +77,9 @@
       padding: 8px 16px;
       border-radius: 20px;
       font-size: 0.85rem;
-      font-weight: 500;
     }
 
-    .status-checking { background: #f59e0b20; color: #fbbf24; }
+    .status-checking { background: #f59e0b20; color: #f59e0b; }
     .status-connected { background: #10b98120; color: #10b981; }
 
     .pulse {
@@ -142,10 +113,10 @@
       font-weight: 600;
     }
 
-    .email-list { max-height: 600px; overflow-y: auto; }
+    .email-list { max-height: 500px; overflow-y: auto; }
 
     .email-item {
-      padding: 20px 24px;
+      padding: 16px 20px;
       border-bottom: 1px solid #334155;
       cursor: pointer;
       transition: background 0.2s;
@@ -153,15 +124,14 @@
 
     .email-item:hover { background: #252f47; }
     .email-item:last-child { border-bottom: none; }
-    .email-item.unread { border-left: 3px solid #3b82f6; }
 
-    .email-from { font-weight: 600; color: #f8fafc; word-break: break-all; }
-    .email-subject { color: #94a3b8; margin: 8px 0; }
+    .email-from { font-weight: 600; color: #f8fafc; }
+    .email-subject { color: #94a3b8; margin: 4px 0; }
     .email-preview { color: #64748b; font-size: 0.9rem; }
 
     .empty {
       text-align: center;
-      padding: 80px 20px;
+      padding: 60px 20px;
       color: #64748b;
     }
 
@@ -173,7 +143,7 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      z-index: 1000;
+      z-index: 100;
     }
 
     .modal-overlay.active { display: flex; }
@@ -202,10 +172,7 @@
       color: #94a3b8;
       font-size: 1.8rem;
       cursor: pointer;
-      padding: 0;
     }
-
-    .modal-close:hover { color: #f8fafc; }
 
     .modal-body {
       padding: 24px;
@@ -215,18 +182,13 @@
 
     .meta {
       display: grid;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 20px;
       padding-bottom: 20px;
       border-bottom: 1px solid #334155;
     }
 
-    .meta-row {
-      display: flex;
-      gap: 12px;
-      font-size: 0.95rem;
-    }
-
+    .meta-row { display: flex; gap: 12px; }
     .meta-label { color: #64748b; min-width: 70px; }
     .meta-value { color: #e2e8f0; word-break: break-all; }
 
@@ -238,7 +200,7 @@
 
     .email-body iframe {
       width: 100%;
-      min-height: 400px;
+      min-height: 300px;
       border: none;
       border-radius: 8px;
       background: white;
@@ -254,55 +216,36 @@
       border-radius: 12px;
       transform: translateX(150%);
       transition: transform 0.3s;
-      z-index: 2000;
+      z-index: 200;
     }
 
     .toast.show { transform: translateX(0); }
 
     @media (max-width: 640px) {
       h1 { font-size: 1.8rem; }
-      .email-row { flex-direction: column; }
-      .btn { width: 100%; justify-content: center; }
+      .email-row { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>📧 Live Temp Mail</h1>
-      <p class="subtitle">Generate, receive, and read emails — all in one page</p>
+      <h1>📧 Temporary Email</h1>
+      <p style="color: #94a3b8; margin-top: 8px;">Receive and read emails completely anonymously</p>
     </header>
 
-    <div class="warning">
-      ⚠️ <strong>Step 1:</strong> Deploy the backend worker first, then paste your URL below.
-    </div>
-
     <div class="card">
-      <div class="card" style="margin-bottom: 16px;">
-        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <input 
-            type="text" 
-            id="serverUrl" 
-            class="email-input" 
-            placeholder="Paste your worker URL (e.g., https://temp-mail.yourname.workers.dev)"
-            style="font-size: 0.95rem;"
-          />
-          <button class="btn btn-secondary" onclick="saveServer()">Save & Connect</button>
-        </div>
-      </div>
-
       <div class="email-row">
-        <input type="text" id="email" class="email-input" readonly placeholder="Click Generate to create email" />
+        <input type="text" id="email" class="email-input" readonly />
         <button class="btn btn-secondary" onclick="copyEmail()">📋 Copy</button>
-        <button class="btn btn-primary" onclick="generateEmail()">🔄 Generate</button>
+        <button class="btn btn-primary" onclick="generateEmail()">🔄 New Email</button>
       </div>
       
-      <div style="display: flex; gap: 12px; align-items: center; margin-top: 12px;">
+      <div style="display: flex; gap: 12px; align-items: center;">
         <span id="status" class="status status-checking">
           <span class="pulse"></span>
-          <span id="statusText">Enter your server URL above</span>
+          <span id="statusText">Checking for emails...</span>
         </span>
-        <button class="btn btn-secondary" onclick="checkInbox()">🔄 Refresh</button>
       </div>
     </div>
 
@@ -314,17 +257,18 @@
       <div id="inbox" class="email-list">
         <div class="empty">
           <div style="font-size: 3rem; margin-bottom: 12px;">📭</div>
-          <p>No emails yet. Click "Generate" to start.</p>
+          <p>No emails yet</p>
+          <p style="font-size: 0.9rem; margin-top: 8px;">Copy your email address above</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Email Viewer Modal -->
+  <!-- Email Modal -->
   <div id="modal" class="modal-overlay" onclick="closeModal(event)">
     <div class="modal" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <span style="font-weight: 600;">📧 Email Details</span>
+        <span style="font-weight: 600;">📧 Email</span>
         <button class="modal-close" onclick="closeModal()">&times;</button>
       </div>
       <div class="modal-body">
@@ -334,16 +278,12 @@
             <span id="m-from" class="meta-value"></span>
           </div>
           <div class="meta-row">
-            <span class="meta-label">To:</span>
-            <span id="m-to" class="meta-value"></span>
+            <span class="meta-label">Subject:</span>
+            <span id="m-subject" class="meta-value"></span>
           </div>
           <div class="meta-row">
             <span class="meta-label">Date:</span>
             <span id="m-date" class="meta-value"></span>
-          </div>
-          <div class="meta-row">
-            <span class="meta-label">Subject:</span>
-            <span id="m-subject" class="meta-value"></span>
           </div>
         </div>
         <div id="m-body" class="email-body"></div>
@@ -351,224 +291,203 @@
     </div>
   </div>
 
-  <div id="toast" class="toast">Copied!</div>
+  <div id="toast" class="toast"></div>
 
   <script>
-    // ============================================
-    // CONFIGURATION - AUTO-SAVED IN BROWSER
-    // ============================================
-    const SERVER_URL_KEY = 'tempMailServerUrl';
-    let API_URL = localStorage.getItem(SERVER_URL_KEY) || '';
+    // ALL SERVERS AND PROXIES ARE PRECONFIGURED. NO SETUP NEEDED.
+    const CORS_PROXIES = [
+      'https://corsproxy.io/?',
+      'https://api.allorigins.win/raw?url=',
+      'https://cors-proxy.fringe.zone/'
+    ];
+
     let currentEmail = null;
     let emailParts = null;
     let messages = [];
     let pollInterval = null;
 
-    // ============================================
-    // INITIALIZATION
-    // ============================================
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedUrl = localStorage.getItem(SERVER_URL_KEY);
-      if (savedUrl) {
-        document.getElementById('serverUrl').value = savedUrl;
-        API_URL = savedUrl;
-        updateStatus('Ready to generate email', 'checking');
-      }
-    });
+    // Auto generate email immediately on page load
+    window.addEventListener('load', generateEmail);
 
-    function saveServer() {
-      const url = document.getElementById('serverUrl').value.trim();
-      if (!url) {
-        alert('Please enter a valid URL');
-        return;
-      }
-      
-      // Ensure URL is clean
-      API_URL = url.replace(/\/$/, '');
-      localStorage.setItem(SERVER_URL_KEY, API_URL);
-      
-      showToast('✅ Server saved! Click Generate to start.');
-      updateStatus('Ready to generate email', 'checking');
+    function getProxyUrl(url) {
+      const proxy = CORS_PROXIES[Math.floor(Math.random() * CORS_PROXIES.length)];
+      return proxy + encodeURIComponent(url);
     }
 
-    // ============================================
-    // EMAIL GENERATION
-    // ============================================
-    async function generateEmail() {
-      if (!API_URL) {
-        alert('Please save your server URL first!');
-        document.getElementById('serverUrl').focus();
-        return;
-      }
-
-      // Stop any existing polling
+    function generateEmail() {
       if (pollInterval) clearInterval(pollInterval);
+      
+      const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+      let login = '';
+      for (let i = 0; i < 10; i++) {
+        login += chars[Math.floor(Math.random() * chars.length)];
+      }
+      
+      const domains = ['1secmail.com', '1secmail.org', '1secmail.net', 'laafd.com', 'esiix.com'];
+      const domain = domains[Math.floor(Math.random() * domains.length)];
+      
+      currentEmail = `${login}@\({domain}`;
+      emailParts = { login, domain };
+      
+      document.getElementById('email').value = currentEmail;
       messages = [];
       renderInbox();
-
-      updateStatus('Generating email...', 'checking');
-
-      try {
-        const response = await fetch(`${API_URL}/generate`);
-        const data = await response.json();
-        
-        currentEmail = data.email;
-        emailParts = { login: data.username, domain: data.domain };
-        
-        document.getElementById('email').value = currentEmail;
-        
-        updateStatus('Email created! Checking inbox...', 'connected');
-        
-        // Start auto-polling
-        checkInbox(); // immediate check
-        pollInterval = setInterval(checkInbox, 5000); // every 5 seconds
-        
-        showToast(`✅ Email generated: ${currentEmail}`);
-        
-      } catch (err) {
-        console.error('Generate failed:', err);
-        updateStatus('❌ Generation failed', 'checking');
-        showToast('Error: Check server URL and try again');
-      }
+      
+      updateStatus('Checking for emails...', 'checking');
+      
+      checkInbox();
+      pollInterval = setInterval(checkInbox, 6000);
     }
 
-    // ============================================
-    // INBOX AUTO-CHECKING
-    // ============================================
     async function checkInbox() {
       if (!emailParts) return;
-
+      
       const { login, domain } = emailParts;
+      const apiUrl = `https://www.1secmail.com/api/v1/?action=getMessages&login=\){login}&domain=\({domain}`;
       
       try {
-        const response = await fetch(`${API_URL}/inbox/${encodeURIComponent(currentEmail)}`);
+        const response = await fetch(getProxyUrl(apiUrl));
         const data = await response.json();
-
-        if (data.error) throw new Error(data.error);
-
-        // Process new messages
+        
+        if (!Array.isArray(data)) throw new Error('Invalid response');
+        
         const currentIds = new Set(messages.map(m => m.id));
         const newMessages = [];
-
-        for (const msg of data.messages) {
+        
+        for (const msg of data) {
           if (!currentIds.has(msg.id)) {
-            newMessages.push(msg);
+            const fullMsg = await fetchMessage(msg.id);
+            if (fullMsg) newMessages.push(fullMsg);
           }
         }
-
+        
         if (newMessages.length > 0) {
           messages.unshift(...newMessages);
+          messages.sort((a, b) => new Date(b.date) - new Date(a.date));
           renderInbox();
-          showToast(`📧 ${newMessages.length} new email(s)!`);
+          showToast(`📧 \){newMessages.length} new email!`);
         }
-
-        updateStatus(`✅ Live • ${messages.length} emails`, 'connected');
-
+        
+        updateStatus('Live • checking every 6s', 'connected');
+        
       } catch (err) {
-        console.error('Inbox check failed:', err);
-        updateStatus('⚠️ Connection issue - retrying...', 'checking');
+        updateStatus('Reconnecting...', 'checking');
       }
     }
 
-    // ============================================
-    // RENDER EMAILS
-    // ============================================
+    async function fetchMessage(id) {
+      const { login, domain } = emailParts;
+      const url = `https://www.1secmail.com/api/v1/?action=readMessage&login=${login}&domain=${domain}&id=\({id}`;
+      
+      try {
+        const response = await fetch(getProxyUrl(url));
+        const data = await response.json();
+        
+        return {
+          id: data.id,
+          from: data.from,
+          subject: data.subject || '(No subject)',
+          date: data.date,
+          body: data.textBody || data.body || '(No content)',
+          htmlBody: data.htmlBody || null
+        };
+      } catch (err) {
+        return null;
+      }
+    }
+
     function renderInbox() {
       const inbox = document.getElementById('inbox');
       const count = document.getElementById('count');
       
       count.textContent = messages.length;
-
+      
       if (messages.length === 0) {
         inbox.innerHTML = `
           <div class="empty">
             <div style="font-size: 3rem; margin-bottom: 12px;">📭</div>
-            <p>Waiting for emails...</p>
-            <p style="font-size: 0.9rem; margin-top: 8px;">Send an email to ${currentEmail || 'your address'}</p>
+            <p>No emails yet</p>
+            <p style="font-size: 0.9rem; margin-top: 8px;">Copy your email address above</p>
           </div>
         `;
         return;
       }
-
-      inbox.innerHTML = messages.map(msg => `
-        <div class="email-item" onclick="openEmail(${msg.id})">
-          <div class="email-from">${escapeHtml(msg.from)}</div>
-          <div class="email-subject">${escapeHtml(msg.subject || '(No subject)')}</div>
-          <div class="email-preview">${escapeHtml(msg.body.substring(0, 150))}...</div>
+      
+      inbox.innerHTML = messages.map(m => `
+        <div class="email-item" onclick="openEmail(\){m.id})">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+            <span class="email-from">\({escape(m.from)}</span>
+            <span style="color: #64748b; font-size: 0.85rem; white-space: nowrap;">\){timeAgo(m.date)}</span>
+          </div>
+          <div class="email-subject">\({escape(m.subject)}</div>
+          <div class="email-preview">\){escape(m.body.substring(0, 120))}...</div>
         </div>
       `).join('');
     }
 
-    // ============================================
-    // EMAIL VIEWER
-    // ============================================
     function openEmail(id) {
-      const msg = messages.find(m => m.id === id);
-      if (!msg) return;
-
-      document.getElementById('m-from').textContent = msg.from;
-      document.getElementById('m-to').textContent = currentEmail;
-      document.getElementById('m-date').textContent = new Date(msg.date).toLocaleString();
-      document.getElementById('m-subject').textContent = msg.subject || '(No subject)';
-
+      const m = messages.find(x => x.id === id);
+      if (!m) return;
+      
+      document.getElementById('m-from').textContent = m.from;
+      document.getElementById('m-date').textContent = new Date(m.date).toLocaleString();
+      document.getElementById('m-subject').textContent = m.subject;
+      
       const bodyDiv = document.getElementById('m-body');
       
-      if (msg.htmlBody) {
-        // Display HTML in iframe for safety
-        bodyDiv.innerHTML = `<iframe sandbox="allow-same-origin" srcdoc="${escapeHtml(msg.htmlBody)}"></iframe>`;
+      if (m.htmlBody) {
+        const cleanHtml = DOMPurify.sanitize(m.htmlBody);
+        bodyDiv.innerHTML = `<iframe sandbox="allow-same-origin" srcdoc="\({escape(cleanHtml)}"></iframe>`;
       } else {
-        bodyDiv.textContent = msg.body;
+        bodyDiv.textContent = m.body;
       }
-
+      
       document.getElementById('modal').classList.add('active');
     }
 
-    function closeModal(event) {
-      if (!event || event.target.id === 'modal') {
+    function closeModal(e) {
+      if (!e || e.target.id === 'modal') {
         document.getElementById('modal').classList.remove('active');
       }
     }
 
-    // ============================================
-    // UTILITIES
-    // ============================================
-    async function copyEmail() {
-      const email = document.getElementById('email').value;
-      if (!email) return;
+    function updateStatus(text, type) {
+      const status = document.getElementById('status');
+      status.className = `status status-\){type}`;
+      document.getElementById('statusText').textContent = text;
+    }
 
+    async function copyEmail() {
       try {
-        await navigator.clipboard.writeText(email);
-        showToast('✅ Copied to clipboard!');
+        await navigator.clipboard.writeText(currentEmail);
+        showToast('Copied to clipboard!');
       } catch {
         document.getElementById('email').select();
-        showToast('Selected - press Ctrl+C');
+        showToast('Selected! Press Ctrl+C');
       }
     }
 
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
     }
 
-    function updateStatus(text, type) {
-      const status = document.getElementById('status');
-      const statusText = document.getElementById('statusText');
-      status.className = `status status-${type}`;
-      statusText.textContent = text;
-    }
-
-    function escapeHtml(text) {
+    function escape(text) {
       const div = document.createElement('div');
       div.textContent = text || '';
       return div.innerHTML;
     }
 
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', () => {
-      if (pollInterval) clearInterval(pollInterval);
-    });
+    function timeAgo(dateStr) {
+      const date = new Date(dateStr);
+      const sec = Math.floor((Date.now() - date) / 1000);
+      if (sec < 60) return 'Just now';
+      if (sec < 3600) return `\({Math.floor(sec/60)}m ago`;
+      if (sec < 86400) return `\){Math.floor(sec/3600)}h ago`;
+      return date.toLocaleDateString();
+    }
   </script>
 </body>
 </html>
